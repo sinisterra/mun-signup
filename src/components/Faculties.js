@@ -12,11 +12,13 @@ import fetch from 'isomorphic-fetch'
 
 const schema = {
   type: 'object',
-  required: [],
+  required: ['person', 'delegation'],
   properties: {
     delegation: {
       type: 'object',
       title: 'Datos de la Delegación',
+      required: [
+      'delegationName', 'institution', 'level'],
       properties: {
         delegationName: {
           type: 'string',
@@ -39,6 +41,13 @@ const schema = {
     person: {
       type: 'object',
       title: 'Datos Personales',
+      required: [
+        'firstName',
+        'lastName1',
+        'lastName2',
+        'email',
+        'aboutTheEvent'
+      ],
       properties: {
         firstName: {
           type: 'string',
@@ -67,7 +76,8 @@ const schema = {
           title: 'Perfil de Facebook'
         },
         aboutTheEvent: {
-          type: 'string'
+          type: 'string',
+          title: '¿Cómo te enteraste de SCIFIMUN?'
         }
       }
     }
@@ -76,7 +86,8 @@ const schema = {
 
 class Faculties extends React.Component {
   state = {
-    formData: {}
+    formData: {},
+    isSubmitting: false
   }
 
   onChange = ({formData}) => {
@@ -87,6 +98,8 @@ class Faculties extends React.Component {
 
   onSubmit = ({formData}) => {
 
+    this.setState({isSubmitting: true})
+
     fetch('/api/faculty', {
       method: 'post',
       headers: {
@@ -96,7 +109,6 @@ class Faculties extends React.Component {
     })
     .then(res => res.json())
     .then(json => {
-      console.log(json)
       this.setState({
         submitted: true
       })
@@ -142,7 +154,7 @@ class Faculties extends React.Component {
                       <div style={ { display: 'flex', justifyContent: 'flex-end' } }>
                         <button
                           type="submit"
-                          className="btn btn-md btn-primary reset">
+                          className={`btn btn-md btn-primary ${this.state.isSubmitting ? 'disabled' : ''}`}>
                           Enviar datos
                         </button>
                       </div>

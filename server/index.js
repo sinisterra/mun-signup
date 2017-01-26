@@ -14,6 +14,7 @@ const facultyMessage = require('./messages/faculty-confirmation.js')
 const delegateMessage = require('./messages/delegate-confirmation.js')
 var nodemailer = require('nodemailer');
 
+app.use(express.static('dist'))
 app.use(bodyParser.json())
 
 const mailer = (faculty, options)  => {
@@ -55,7 +56,7 @@ MongoClient.connect(MONGO_URL, (err, db) => {
         throw err
       }
 
-      // mailer(faculty)
+      mailer(faculty, facultyMessage)
 
       response.json({result: 'ok', faculty})
     })
