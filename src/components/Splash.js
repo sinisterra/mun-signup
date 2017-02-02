@@ -3,10 +3,12 @@ import { Link } from 'react-router'
 import moment from 'moment'
 moment.locale('es')
 
-const FACULTY_REGISTER_OPENS = moment('2017-01-23 00:00')
-const FACULTY_REGISTER_CLOSE = moment('2017-01-31 00:00')
+const FACULTY_REGISTER_OPENS = moment('2017-01-27 00:00')
+const FACULTY_REGISTER_CLOSE = moment('2017-02-01 23:59')
 const DELEGATE_REGISTER_OPENS = moment('2017-02-02 00:00')
 const DELEGATE_REGISTER_CLOSE = moment('2017-02-14 00:00')
+
+const logo = require('../images/scifimun_logo.png')
 
 const getCountdownState = (now, opens, closes) => {
   const nowTime = moment(now).unix()
@@ -35,8 +37,8 @@ const Countdown = ({now, opens, closes, openMessage, notYetMessage, closedMessag
       break;
     case 'OPEN':
       contents = <div>
-                   <span className="text-success">{ openMessage }</span>
-                   <br/><span>Fecha límite: { closes.format('LL') }</span>
+                   <span className="text-success">{ openMessage }</span><br/>
+                   <br/><span>Fecha límite: { closes.format('LLL') }</span>
                  </div>
       break;
     case 'CLOSED':
@@ -60,40 +62,41 @@ const Splash = () => {
 
 
   return (
-    <div
-      className="frow centered-column"
-      style={ { height: '100vh' } }>
+    <div style={ { height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' } }>
       <div className="container">
-        <section className="jumbotron">
-          <div className="frow justify-between centered">
-            <h1>Scifimun 2016</h1>
-            <div
-              className="frow centered-column column-end"
-              style={ { margin: '16px 0px' } }>
-              <Countdown
-                now={ now }
-                opens={ FACULTY_REGISTER_OPENS }
-                closes={ FACULTY_REGISTER_CLOSE }
-                openMessage={ 'Registros para faculties: abiertos' }
-                closedMessage={ 'Registros para faculties: cerrados' }
-                notYetMessage={ 'Registros para faculties: abren' } />
-              <Countdown
-                now={ now }
-                opens={ DELEGATE_REGISTER_OPENS }
-                closes={ DELEGATE_REGISTER_CLOSE }
-                openMessage={ 'Registros para delegados: abiertos' }
-                closedMessage={ 'Registros para faculties: cerrados' }
-                notYetMessage={ 'Registros para delegados: abren' } />
-            </div>
+        <section
+          className="jumbotron"
+          style={ { display: 'flex', flexDirection: 'column', alignItems: 'center' } }>
+          <div style={ { display: 'flex', alignItems: 'center', justifyContent: 'center' } }>
+            <img
+              src={ logo }
+              style={ { maxHeight: 200 } } />
           </div>
-          <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-            <div style={{margin: 8}}>
+          <h1>Scifimun Mexicup</h1>
+          <div style={ { margin: '16px 0px', display: 'flex', flexDirection: 'column', alignItems: 'center' } }>
+            <Countdown
+              now={ now }
+              opens={ FACULTY_REGISTER_OPENS }
+              closes={ FACULTY_REGISTER_CLOSE }
+              openMessage={ 'Registros para faculties: abiertos' }
+              closedMessage={ 'Registros para faculties: cerrados' }
+              notYetMessage={ 'Registros para faculties: abren' } />
+            <Countdown
+              now={ now }
+              opens={ DELEGATE_REGISTER_OPENS }
+              closes={ DELEGATE_REGISTER_CLOSE }
+              openMessage={ 'Registros para delegados: abiertos' }
+              closedMessage={ 'Registros para faculties: cerrados' }
+              notYetMessage={ 'Registros para delegados: abren' } />
+          </div>
+          <div style={ { display: 'flex', justifyContent: 'center', alignItems: 'center' } }>
+            <div style={ { margin: 8 } }>
               <Link
                 to="/faculties"
                 className={ `reset btn btn-lg btn-primary ${facultyRegisterIsDisabled ? 'disabled': null}` }> Faculties
               </Link>
-            </div >
-            <div style={{margin: 8}}>
+            </div>
+            <div style={ { margin: 8 } }>
               <Link
                 to="/delegates"
                 className={ `reset btn btn-lg btn-primary ${delegateRegisterIsDisabled ? 'disabled': null}` }> Delegados

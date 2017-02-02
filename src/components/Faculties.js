@@ -4,10 +4,12 @@ import moment from 'moment'
 
 moment.locale('es')
 
-const SIGNUP_DEADLINE = moment('2017-02-02 00:00')
-const SIGNUP_OPENS = moment('2017-01-27 00:00')
+const FACULTY_REGISTER_OPENS = moment('2017-01-27 00:00')
+const FACULTY_REGISTER_CLOSE = moment('2017-02-02 00:00')
 
-const logo = require('../images/logo.jpg')
+const now = moment()
+
+const logo = require('../images/scifimun_logo.png')
 import fetch from 'isomorphic-fetch'
 
 const schema = {
@@ -18,7 +20,7 @@ const schema = {
       type: 'object',
       title: 'Datos de la Delegación',
       required: [
-      'delegationName', 'institution', 'level'],
+        'delegationName', 'institution', 'level'],
       properties: {
         delegationName: {
           type: 'string',
@@ -72,7 +74,6 @@ const schema = {
         },
         facebook: {
           type: 'string',
-          format: 'uri',
           title: 'Perfil de Facebook'
         },
         aboutTheEvent: {
@@ -98,7 +99,9 @@ class Faculties extends React.Component {
 
   onSubmit = ({formData}) => {
 
-    this.setState({isSubmitting: true})
+    this.setState({
+      isSubmitting: true
+    })
 
     fetch('/api/faculty', {
       method: 'post',
@@ -107,17 +110,17 @@ class Faculties extends React.Component {
       },
       body: JSON.stringify(formData)
     })
-    .then(res => res.json())
-    .then(json => {
-      this.setState({
-        submitted: true
+      .then(res => res.json())
+      .then(() => {
+        this.setState({
+          submitted: true
+        })
       })
-    })
 
   }
 
   render() {
-    return (
+    return now.unix() >= FACULTY_REGISTER_OPENS.unix() ? (
       <div>
         <div className="container">
           <div className="row">
@@ -133,11 +136,11 @@ class Faculties extends React.Component {
                   <dl className="dl-horizontal">
                     <dt style={ { width: 320, paddingRight: 10 } }>Apertura del Registro:</dt>
                     <dd>
-                      { `${SIGNUP_OPENS.format('LL')}` }
+                      { `${FACULTY_REGISTER_OPENS.format('LL')}` }
                     </dd>
                     <dt style={ { width: 320, paddingRight: 10 } }>Fecha Límite:</dt>
                     <dd>
-                      { `${SIGNUP_DEADLINE.format('LL')} ( ${SIGNUP_DEADLINE.fromNow()} )` }
+                      { `${FACULTY_REGISTER_CLOSE.format('LL')} ( ${FACULTY_REGISTER_CLOSE.fromNow()} )` }
                     </dd>
                   </dl>
                 </div>
@@ -154,7 +157,7 @@ class Faculties extends React.Component {
                       <div style={ { display: 'flex', justifyContent: 'flex-end' } }>
                         <button
                           type="submit"
-                          className={`btn btn-md btn-primary ${this.state.isSubmitting ? 'disabled' : ''}`}>
+                          className={ `btn btn-md btn-primary ${this.state.isSubmitting ? 'disabled' : ''}` }>
                           Enviar datos
                         </button>
                       </div>
@@ -186,7 +189,6 @@ class Faculties extends React.Component {
                     SCIFIMUN 2016
                   </div>
                   <div className="col-md-6">
-                    Hello!
                   </div>
                 </div>
               </div>
@@ -194,7 +196,14 @@ class Faculties extends React.Component {
           </div>
         </footer>
       </div>
-    )
+      ) : (
+      <div style={ { display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', height: '100vh' } }>
+        <h1 className="text-center">Los registros no están disponibles.</h1>
+        <a
+          href="https://www.facebook.com/SciFiMUN"
+          className="btn btn-primary text-center">Síguenos en Facebook</a>
+      </div>
+      )
   }
 }
 
